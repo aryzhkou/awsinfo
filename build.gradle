@@ -15,14 +15,15 @@ repositories {
 dependencies {
     implementation(
             'org.springframework.boot:spring-boot-starter-web',
-            'com.amazonaws:aws-java-sdk:1.11.1006'
+            'com.amazonaws:aws-java-sdk:1.11.1006',
     )
 
     testImplementation(
             'org.springframework.boot:spring-boot-starter-test',
-            'org.mockito:mockito-core:3.9.0'
+            'org.junit.jupiter:junit-jupiter-api:5.8.0-M1',
+            'org.mockito:mockito-core:3.9.0',
+            'org.mockito:mockito-inline:3.9.0'
     )
-
 }
 
 test {
