@@ -13,6 +13,12 @@ repositories {
 }
 
 dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.20'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
+
     implementation(
             'org.springframework.boot:spring-boot-starter-web',
             'com.amazonaws:aws-java-sdk:1.11.1006',
