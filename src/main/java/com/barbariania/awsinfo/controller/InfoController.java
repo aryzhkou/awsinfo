@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class InfoController {
-  @RequestMapping({"/", "api/info"})
+  @RequestMapping({"api/info"})
   public ResponseEntity<EC2MetadataUtils.InstanceInfo> getInstanceInfo() {
     final EC2MetadataUtils.InstanceInfo instanceInfo = EC2MetadataUtils.getInstanceInfo();
     if (instanceInfo == null) {

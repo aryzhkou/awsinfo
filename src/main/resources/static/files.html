@@ -1,0 +1,69 @@
+<html>
+<head>
+  <title>File uploader page</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+</head>
+<body>
+<h1>Picture uploading</h1>
+<label for="file">Choose a picture to download</label>
+<br>
+<div id="info-message"></div>
+
+<form method="post" enctype="multipart/form-data">
+  <p><input type="file" name="file" id="file" class="button" accept="image/png, image/jpeg"/></p>
+  <a class="button button2" onclick="uploadFile()">Upload</a>
+</form>
+<script type="text/javascript">
+  function uploadFile() {
+    const url = "/api/files/upload";
+    const file = document.getElementById("file").files[0];
+    const data = new FormData();
+    data.append("file", file);
+
+    $.ajax({
+      url: url,
+      type: "POST",
+      method: "POST",
+      data: data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function (data, codeStatus) {
+        if (typeof data === 'string') {
+          data = JSON.parse(data);
+        }
+        greenMessage("info-message", "OK, file uploaded with name = " + data.name);
+        // getUploaded();
+        document.getElementById("file").value = null;
+      },
+      error: function (XMLHttpRequest, status, errorThrown) {
+        redMessage("info-message", XMLHttpRequest.status + " : " + XMLHttpRequest.responseText);
+      }
+    });
+
+    function greenMessage(messageDivName, text) {
+      let messageDiv = document.getElementById(messageDivName);
+      messageDiv.style.backgroundColor = "#0f0";
+      messageDiv.style.color = "#000";
+      messageDiv.textContent = text;
+      setTimeout(function () {
+        messageDiv.textContent = "";
+      }, 5000);
+    }
+
+    function redMessage(messageDivName, text, keepAlive) {
+      let messageDiv = document.getElementById(messageDivName);
+      messageDiv.style.backgroundColor = "#ff1945";
+      messageDiv.style.color = "#fff";
+      messageDiv.textContent = text;
+      if (!keepAlive) {
+        setTimeout(function () {
+          messageDiv.textContent = "";
+        }, 5000);
+      }
+    }
+  }
+</script>
+</body>
+</html>

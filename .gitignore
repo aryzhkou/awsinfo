@@ -2,3 +2,7 @@
 *iml
 build
 .gradle
+#docker-compose database folder
+awsinfo_mysql
+#folder for uploaded files
+upload

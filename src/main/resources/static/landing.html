@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<ul>
+  <li><a href="files.html">Upload file</a></li>
+  <li><a href="">Download file by name</a></li>
+  <li><a href="api/files/metadata">Show metadata for all files</a></li>
+  <li><a style="cursor: pointer" onclick="getFilenameMetadata('file')">Get metadata by filename</a>
+    <input type="text" id="filename" placeholder="latest will be got if blank"/>
+  </li>
+  <li>Delete image by name</li>
+</ul>
+
+<script>
+  function getFilenameMetadata(parameter) {
+    let filename = document.getElementById("filename").value;
+    if (parameter === 'file') {
+      window.location.href = "api/files/metadata?filename=" + filename
+    }
+  }
+</script>
+
+</body>
+</html>

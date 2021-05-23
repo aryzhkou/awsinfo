@@ -1,0 +1,33 @@
+version: "3.7"
+services:
+  mysql-database:
+    container_name: mysql_awsinfo
+    image: library/mysql:5.7.29
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password --innodb_use_native_aio=0
+    ports:
+      - "8306:3306"
+    environment:
+      MYSQL_DATABASE: 'awsinfo'
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: barbarian
+      MYSQL_PASSWORD: password
+    volumes:
+      - "./awsinfo_mysql/:/var/lib/mysql"
+  adminer:
+    image: adminer
+    restart: always
+    links:
+      - mysql-database:mysql
+    ports:
+      - 8082:8080
+
+
+# start docker-compose file
+# sudo docker-compose -f docker-compose_environment.yml up
+
+# stop docker-compose file
+# sudo docker-compose -f docker-compose_environment.yml down
+
+# connect to mysql on docker (mysql-server must be installed before on machine)
+#sudo mysql -uroot -proot --port=8306 --host=127.0.0.1
