@@ -4,8 +4,11 @@ import com.barbariania.awsinfo.dao.FileMetadataRepository;
 import com.barbariania.awsinfo.dto.FileMetadata;
 import com.barbariania.awsinfo.exception.FileStorageException;
 import com.barbariania.awsinfo.processor.FileProcessor;
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -21,7 +24,7 @@ public class FileService {
   private final FileMetadataRepository fileMetadataRepository;
 
   public FileMetadata upload(MultipartFile file) {
-    try {
+    try {//todo replace file and metadata if already exists?
       String filePath = fileProcessor.upload(file);
 
       return save(file.getOriginalFilename(), file.getSize(), filePath);
@@ -32,8 +35,8 @@ public class FileService {
     }
   }
 
-  public MultipartFile download(String filename) {
-    return null; //todo fixme
+  public byte[] download(String filename) throws NotFoundException, IOException {
+    return fileProcessor.download(filename);
   }
 
   public List<FileMetadata> getAllFilesMetadata() {
@@ -41,13 +44,20 @@ public class FileService {
   }
 
   public FileMetadata getMetadataByFilename(String name) {
-    return name == null
+    return ObjectUtils.isEmpty(name)
         ? fileMetadataRepository.findTopByOrderByIdDesc() //return latest
         : fileMetadataRepository.findByName(name);
   }
 
+  @Transactional
   public void delete(String name) {
-    //todo implement
+    try {
+      fileProcessor.deleteByName(name);
+      fileMetadataRepository.deleteByName(name);
+    } catch (IOException exception) {
+      exception.printStackTrace();
+      throw new FileStorageException("Could not delete file: " + exception.getMessage());
+    }
   }
 
   private FileMetadata save(String filename, long size, String path) {
@@ -59,7 +69,7 @@ public class FileService {
     fileMetadata.setSize(size);
     fileMetadata.setExtension(getExtension(filename));
     fileMetadata.setLastUpdateTime(utcDateTime);
-    fileMetadata.setLink(path);
+    fileMetadata.setLink("/api/files/download?filename=" + filename);
 
     fileMetadata = fileMetadataRepository.save(fileMetadata);
 

@@ -1,5 +1,6 @@
 package com.barbariania.awsinfo.processor;
 
+import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -26,5 +27,20 @@ public class FileFtpProcessor implements FileProcessor {
     Files.copy(file.getInputStream(), copyLocation, StandardCopyOption.REPLACE_EXISTING);
 
     return copyLocation.toString();
+  }
+
+  @Override
+  public byte[] download(String filename) throws NotFoundException, IOException {
+    Path filePath = Paths.get(uploadDir + File.separator + StringUtils.cleanPath(Objects.requireNonNull(filename)));
+    if (Files.exists(filePath)) {
+      return Files.readAllBytes(filePath);
+    }
+    throw new NotFoundException("No file with such name exist");
+  }
+
+  @Override
+  public void deleteByName(String filename) throws IOException {
+    Path filePath = Paths.get(uploadDir + File.separator + StringUtils.cleanPath(Objects.requireNonNull(filename)));
+    Files.delete(filePath);
   }
 }

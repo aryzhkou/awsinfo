@@ -19,9 +19,13 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok:1.18.20'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
 
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//    runtimeOnly 'com.h2database:h2'
+
     implementation(
             'org.springframework.boot:spring-boot-starter-web',
             'com.amazonaws:aws-java-sdk:1.11.1006',
+            'mysql:mysql-connector-java:8.0.25',
     )
 
     testImplementation(

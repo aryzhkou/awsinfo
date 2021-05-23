@@ -23,6 +23,7 @@ public class DataSourceConfig {
     Class.forName(driverClassName);
     DriverManagerDataSource dataSource = new DriverManagerDataSource(dbUrl, dbUsername, dbPassword);
     dataSource.setDriverClassName(driverClassName);
+//    dataSource.setSchema(schema); //does not affect workability
     return dataSource;
   }
 }
