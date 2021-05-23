@@ -10,8 +10,8 @@ services:
     environment:
       MYSQL_DATABASE: 'awsinfo'
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: barbarian
-      MYSQL_PASSWORD: password
+      MYSQL_USER: barbariania
+      MYSQL_PASSWORD: superSecret#1PASS
     volumes:
       - "./awsinfo_mysql/:/var/lib/mysql"
   adminer:

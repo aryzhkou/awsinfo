@@ -5,6 +5,8 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 public interface FileMetadataRepository extends CrudRepository<FileMetadata, Long> {
   FileMetadata findByName(String name);
 
@@ -15,5 +17,6 @@ public interface FileMetadataRepository extends CrudRepository<FileMetadata, Lon
 
   List<FileMetadata> findAll();
 
+  @Transactional
   void deleteByName(String name);
 }

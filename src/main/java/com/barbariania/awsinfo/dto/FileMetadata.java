@@ -1,6 +1,5 @@
 package com.barbariania.awsinfo.dto;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,8 +16,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class FileMetadata {
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private long id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
   private LocalDateTime lastUpdateTime;
   private String name;
   private long size; // bytes
