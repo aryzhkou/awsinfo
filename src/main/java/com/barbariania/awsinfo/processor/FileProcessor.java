@@ -1,9 +1,10 @@
 package com.barbariania.awsinfo.processor;
 
-import javassist.NotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+
+import javassist.NotFoundException;
 
 public interface FileProcessor {
   String upload(MultipartFile file) throws IOException;

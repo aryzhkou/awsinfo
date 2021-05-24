@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,6 +35,9 @@ public class FileController {
   @GetMapping(value = "download")
   public void downloadFile(@RequestParam String filename, HttpServletResponse response) throws IOException, NotFoundException {
     final FileMetadata fileMetadata = fileService.getMetadataByFilename(filename);
+    if (fileMetadata == null) {
+      throw new NotFoundException("File '" + filename + "' not exists in database");
+    }
     response.setContentType("image/" + fileMetadata.getExtension());
     response.addHeader("Content-Disposition", "attachment; filename=" + filename);
     response.getOutputStream().write(fileService.download(filename));
@@ -57,6 +61,7 @@ public class FileController {
   }
 
   @DeleteMapping(value = "{filename}")
+  @ResponseStatus(value = HttpStatus.NO_CONTENT)
   public void deleteByName(@PathVariable String filename) {
     fileService.delete(filename);
   }

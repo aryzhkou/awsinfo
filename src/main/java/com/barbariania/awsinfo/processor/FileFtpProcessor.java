@@ -15,7 +15,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 
-@Component
+//@Component //uncomment to use it and comment FileAwsS3Processor
 @RequiredArgsConstructor
 public class FileFtpProcessor implements FileProcessor {
   @Value("${app.upload.dir:${user.home}}")
