@@ -1,13 +1,19 @@
 package com.barbariania.awsinfo.lambda;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.amazonaws.services.lambda.runtime.LambdaLogger;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.Message;
@@ -31,6 +37,14 @@ public class SnsPublisher implements RequestStreamHandler {
     private static final AmazonSQS SQS_CLIENT = getSqsClient();
 
     public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        try {
+            JSONObject event = (JSONObject) new JSONParser().parse(reader);
+            System.out.println("Request body: " + event);
+        }
+        catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
 
         final List<Message> sqsMessages = getMessagesFromSqs(10);
         System.out.println("Returned " + sqsMessages.size() + " messages from SQS");
