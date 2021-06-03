@@ -81,20 +81,14 @@ public class SubscriptionService //Aws Sns
         }
     }
 
-    public void publishMessage(String message) {
-        try {
-            PublishRequest request = PublishRequest.builder()
-                                                   .message(message)
-                                                   .topicArn(SNS_TOPIC)
-                                                   .build();
+    public void publishMessage(String message) throws SnsException {
+        PublishRequest request = PublishRequest.builder()
+                                               .message(message)
+                                               .topicArn(SNS_TOPIC)
+                                               .build();
 
-            PublishResponse result = snsClient.publish(request);
-            log.info(result.messageId() + " Message sent. Status was " + result.sdkHttpResponse().statusCode());
-
-        } catch (SnsException e) {
-            log.error(e.awsErrorDetails().errorMessage());
-            e.printStackTrace();
-        }
+        PublishResponse result = snsClient.publish(request);
+        log.info(result.messageId() + " Message sent. Status was " + result.sdkHttpResponse().statusCode());
     }
 
     private SnsClient getSnsClient() {
