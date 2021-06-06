@@ -36,9 +36,9 @@ public class FileAwsS3Processor implements FileProcessor
     private String bucketName;
     @Value("${aws.bucket.region}")
     private String bucketRegion;
-    @Value("${aws.bucket.accessKey}")
+    @Value("${AWS_ACCESS_KEY_ID}")
     private String accessKey;
-    @Value("${aws.bucket.secretKey}")
+    @Value("${AWS_SECRET_ACCESS_KEY}")
     private String secretKey;
 
     private AmazonS3 s3Client = null;

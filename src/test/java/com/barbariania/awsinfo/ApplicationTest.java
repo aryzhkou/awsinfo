@@ -29,6 +29,11 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 class ApplicationTest {
   private MockMvc mockMvc;
 
+  static {
+    System.setProperty("AWS_ACCESS_KEY_ID", "awsAccessKey");
+    System.setProperty("AWS_SECRET_ACCESS_KEY", "awsSecretKey");
+  }
+
   @Autowired
   private WebApplicationContext webApplicationContext;
 
@@ -42,26 +47,27 @@ class ApplicationTest {
   @Test
   void getInstanceInfo() throws Exception {
     final EC2MetadataUtils.InstanceInfo instanceInfoMock = mock(EC2MetadataUtils.InstanceInfo.class);
-    when(instanceInfoMock.getAvailabilityZone()).thenReturn("eu-central-1b");
-    final String responseString = performGetRoot(instanceInfoMock, status().isOk());
+    String availabilityZone = "eu-central-1b";
+    when(instanceInfoMock.getAvailabilityZone()).thenReturn(availabilityZone);
+    final String responseString = performGetInfo(instanceInfoMock, status().isOk());
 
     final EC2MetadataUtils.InstanceInfo response = OBJECT_MAPPER.readValue(responseString, EC2MetadataUtils.InstanceInfo.class);
-    assertThat(response.getAvailabilityZone()).isEqualTo("eu-central-1b");
+    assertThat(response.getAvailabilityZone()).isEqualTo(availabilityZone);
   }
 
   @Test
   void getInstanceInfo_fail() throws Exception {
-    final String contentAsString = performGetRoot(null, status().isInternalServerError());
+    final String contentAsString = performGetInfo(null, status().isInternalServerError());
     assertThat(contentAsString).isEqualTo("AWS returned no instanceInfo, check machine logs");
   }
 
-  private String performGetRoot(EC2MetadataUtils.InstanceInfo instanceInfoMock, ResultMatcher resultMatcher) throws Exception {
+  private String performGetInfo(EC2MetadataUtils.InstanceInfo instanceInfoMock, ResultMatcher resultMatcher) throws Exception {
     try (MockedStatic<EC2MetadataUtils> ec2UtilsMock = Mockito.mockStatic(EC2MetadataUtils.class)) {
 
       ec2UtilsMock.when(EC2MetadataUtils::getInstanceInfo)
           .thenReturn(instanceInfoMock);
 
-      final MvcResult mvcResult = mockMvc.perform(get("/"))
+      final MvcResult mvcResult = mockMvc.perform(get("/api/info"))
           .andExpect(resultMatcher)
           .andExpect(content().contentType(MediaType.APPLICATION_JSON))
           .andReturn();
