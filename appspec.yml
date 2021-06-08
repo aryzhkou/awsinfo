@@ -1,0 +1,9 @@
+version: 0.0
+Resources:
+  - module10Lambda:
+      Type: AWS::Lambda::Function
+      Properties:
+        Name: "module10-lambda"
+        Alias: "awsinfoBatchAlias"
+        CurrentVersion: "2"
+        TargetVersion: "10"

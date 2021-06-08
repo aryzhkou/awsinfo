@@ -15,8 +15,20 @@ phases:
   post_build:
     commands:
       - echo Build completed on $(date --utc '+%Y-%m-%dT%H:%M:%S')
+      # publish zip to lambda function
+      - aws lambda update-function-code --function-name module10-lambda --zip-file fileb://lambda/build/distributions/lambda-0.0.1-SNAPSHOT.zip --publish
+      # save build artifacts separately in s3
+      # - aws s3 cp build/libs/awsinfo-0.0.1-SNAPSHOT.jar s3://codebuild-eu-west-2-awsinfo-output/awsinfo-pipeline/awsinfo.jar
+      - aws s3 cp appspec.yml s3://codebuild-eu-west-2-awsinfo-output/awsinfo-pipeline/appspec.yml
+      # Register your application revision
+      - aws deploy register-application-revision --application-name awsinfo --s3-location bucket=codebuild-eu-west-2-awsinfo-output,key=awsinfo-pipeline/appspec.yml,bundleType=YAML
+      # Get the application revision to make sure it worked
+      - aws deploy get-application-revision --application-name awsinfo --s3-location bucket=codebuild-eu-west-2-awsinfo-output,key=awsinfo-pipeline/appspec.yml,bundleType=YAML
+      - aws deploy create-deployment --application-name awsinfo --deployment-group-name codedeploy-lambda --s3-location bucket=codebuild-eu-west-2-awsinfo-output,key=awsinfo-pipeline/appspec.yml,bundleType=YAML
 artifacts:
   files:
     - build/libs/awsinfo-0.0.1-SNAPSHOT.jar
     - lambda/build/distributions/lambda-0.0.1-SNAPSHOT.zip
+    - lambda/src/main/python/triggered-by-s3.py
+    - appspec.yml
   discard-paths: yes
