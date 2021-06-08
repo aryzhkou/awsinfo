@@ -37,6 +37,8 @@ public class SnsPublisher implements RequestStreamHandler {
     private static final AmazonSQS SQS_CLIENT = getSqsClient();
 
     public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) {
+        /* Investigate input context object https://docs.aws.amazon.com/lambda/latest/dg/java-context.html */
+        System.out.println("Current lambda name:version = " + context.getFunctionName() + ":" + context.getFunctionVersion());
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         try {
             JSONObject event = (JSONObject) new JSONParser().parse(reader);
