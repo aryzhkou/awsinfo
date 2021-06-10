@@ -38,6 +38,7 @@ public class SnsPublisher implements RequestStreamHandler {
 
     public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) {
         /* Investigate input context object https://docs.aws.amazon.com/lambda/latest/dg/java-context.html */
+        System.out.println("check version is deployed");
         System.out.println("Current lambda name:version = " + context.getFunctionName() + ":" + context.getFunctionVersion());
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         try {
