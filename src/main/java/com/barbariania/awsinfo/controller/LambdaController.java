@@ -1,4 +1,4 @@
-package com.barbariania.awsinfo.controller.body;
+package com.barbariania.awsinfo.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

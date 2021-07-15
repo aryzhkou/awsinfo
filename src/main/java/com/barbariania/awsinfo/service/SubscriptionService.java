@@ -5,13 +5,12 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.barbariania.awsinfo.processor.AwsCredentialsProcessor;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sns.model.PublishRequest;
@@ -24,13 +23,11 @@ import software.amazon.awssdk.services.sns.model.UnsubscribeResponse;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class SubscriptionService //Aws Sns
 {
-    @Value("${AWS_ACCESS_KEY_ID}")
-    private String awsAccessKey;
-    @Value("${AWS_SECRET_ACCESS_KEY}")
-    private String awsSecretKey;
     private SnsClient snsClient = null;
+    private final AwsCredentialsProcessor awsCredentialsProcessor;
 
     private static final Map<String, String> SUBSCRIPTIONS = new HashMap<>();
 
@@ -92,10 +89,8 @@ public class SubscriptionService //Aws Sns
     }
 
     private SnsClient getSnsClient() {
-        final AwsBasicCredentials awsBasicCredentials = AwsBasicCredentials.create(awsAccessKey, awsSecretKey);
-        AwsCredentialsProvider credentialsProvider = StaticCredentialsProvider.create(awsBasicCredentials);
         return SnsClient.builder()
-                        .credentialsProvider(credentialsProvider)
+                        .credentialsProvider(awsCredentialsProcessor.getCredentialsProvider())
                         .region(Region.EU_WEST_2)
                         .build();
     }
