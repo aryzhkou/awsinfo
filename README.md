@@ -2,6 +2,7 @@
 
 ## Endpoints
 * *GET* <code>/</code> landing page
+* *GET* <code>/actuator/health</code> Downstream health information
 * *GET* <code>/api/info</code> get aws instance info
 * *GET* <code>/api/files/metadata</code> get metadata for all files
 * *GET* <code>/api/files/metadata</code?filename=</code> get metadata for last uploaded file
